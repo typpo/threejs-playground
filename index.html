@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Boilerplate testing</title>
+		<title>Rate calendar</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
@@ -14,6 +14,8 @@
 		<script src="vendor/threex/THREEx.FullScreen.js"></script>
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
 		<script src="vendor/threex.dragpancontrols.js"></script>
+
+    <script src="fonts/helvetiker_regular.typeface.js"></script>
 
 		<link  href="css/main.css" rel="stylesheet"/>
     <style>
@@ -73,7 +75,7 @@
 			//camera	= new THREE.OrthographicCamera(-cameraW/2, +cameraW/2, cameraH/2, -cameraH/2, 1, 10000);
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 			//camera.position.set(0, 0, 100);
-      camera.position.z = 100;
+      camera.position.z = 500;
 			scene.add(camera);
 
 			// create a camera contol
@@ -121,23 +123,54 @@
       })();
 
 
-      // "sun"
-      (function() {
-        var geometry= new THREE.SphereGeometry(1, 0.42);
-        var material= new THREE.MeshNormalMaterial();
-        var mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-      })();
+      //r77
+      function renderText(str, x, y, z) {
+        var text3d = new THREE.TextGeometry(str, {
+          size: 80,
+          height: 20,
+          curveSegments: 2,
+          font: "helvetiker"
 
-      // foo
-      (function() {
-        var geometry = new THREE.EllipseCurve(0,0,100,100,90,90,true)
-        var mesh = THREE.SceneUtils.createMultiMaterialObject( geometry, [ new THREE.MeshLambertMaterial( { color: 0x00ffff } ), new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } ) ] );
-        mesh.position.set( x, y, z - 75 );
-        mesh.rotation.set( rx, ry, rz );
-        mesh.scale.set( s, s, s );
-        scene.add(mesh)
-      })();
+        });
+
+        text3d.computeBoundingBox();
+        var centerOffset = -0.5 * ( text3d.boundingBox.max.x - text3d.boundingBox.min.x );
+
+        var textMaterial = new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, overdraw: true } );
+        text = new THREE.Mesh( text3d, textMaterial );
+
+        text.doubleSided = false;
+
+        /*
+        text.position.x = centerOffset;
+        text.position.y = 100;
+        text.position.z = 0;
+        */
+        text.position.x = x;
+        text.position.y = y;
+        text.position.z = z;
+
+        text.rotation.x = 0;
+        text.rotation.y = Math.PI * 2;
+
+        parent = new THREE.Object3D();
+        parent.add( text );
+        scene.add(parent);
+      }
+      renderText('room 77', 0,0,0);
+      renderText('$215', -300,0,0);
+      renderText('$220', -300,0,-200);
+      renderText('$220', -300,0,-400);
+
+      renderText('expedia', 0,-200,0);
+      renderText('$245', -300,-200,0);
+      renderText('$245', -300,-200,-200);
+      renderText('$245', -300,-200,-400);
+
+      renderText('orbitz', 0,-400,0);
+      renderText('$245', -300,-400,0);
+      renderText('$245', -300,-400,-200);
+      renderText('$200', -300,-400,-400);
 		}
 
 		// animation loop
